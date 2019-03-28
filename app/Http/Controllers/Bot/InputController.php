@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Bot;
 
+use App\Http\Controllers\Bot\step_route\stepRoute;
+use App\Http\Controllers\Bot\text_route\textRoute;
+use App\Models\BotInputMessage;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Telegram;
 
@@ -15,42 +18,43 @@ class InputController extends Controller
     public function index()
     {
         self::$updates = json_decode(Telegram::commandsHandler(true));
-        // Commands handler method returns an Update object.
-        // So you can further process $update object
-        // to however you want.
         file_put_contents('updates.txt', json_encode(self::$updates) . PHP_EOL . PHP_EOL, FILE_APPEND);
-        MainKeyboardController::showMainKeys();
+//        MainKeyboardController::showSettings();
         $this->check();
-
         return 'ok';
     }
 
     public function check()
     {
-//        $user = User::where('id', self::$updates->message->from->id)->first();
-        if (User::where('id', '=', self::$updates->message->from->id)->first() === null) {
-            $this->create();
+        $input               = new BotInputMessage();
+        $input->update_id    = self::$updates->update_id;
+        $input->message_id   = self::$updates->message->message_id;
+        $input->user_id      = self::$updates->message->from->id;
+        $input->date_sent_at = Carbon::createFromTimestamp(self::$updates->message->date)->toDateTimeString();
+        $input->json_input   = json_encode(self::$updates);
+        $input->save();
+        if (User::where('telegram_user_id', self::$updates->message->from->id)->first() == null) {
+            MainKeyboardController::showMainKeys();
+            UserController::create();
+            $response = Telegram::sendMessage([
+                'chat_id' => self::$updates->message->from->id,
+                'text'    => 'Its Your First Time Using This Bot' .
+                             PHP_EOL .
+                             'WELCOME'
+            ]);
         } else {
-            return 'ok';
+            StepRoute::stepRouteDispatcher();
         }
     }
 
-    public function create()
+    public static function askForUpdateLocation()
     {
-        $user                   = new User();
-        $user->telegram_user_id = self::$updates->message->from->id;
-        $user->first_name       = self::$updates->message->from->first_name;
-        $user->last_name        = self::$updates->message->from->last_name;
-        $user->user_name        = self::$updates->message->from->username;
-        $user->language_code    = self::$updates->message->from->language_code;
-        $user->is_bot           = self::$updates->message->from->is_bot;
-        $user->pay_amount       = 0;
-        $user->invite_score     = 0;
-        $user->was_invited      = 0;
-        $user->channel          = 1;
-        $user->country          = null;
-        $user->remember_token   = bcrypt(self::$updates->message->from->id);
-        $user->user_step        = "start";
-        $user->save();
+        $user = UserController::updateStep('update_location');
+        MainKeyboardController::askForUpdateLocation();
+        /*        if ($user){
+                    MainKeyboardController::ok();
+                }else{
+                    MainKeyboardController::error();
+                }*/
     }
 }
