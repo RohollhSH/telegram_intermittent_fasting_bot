@@ -9,15 +9,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Telegram;
 
-class AskUpdateLocation extends Controller
+
+class AskStartFast extends Controller
 {
     public static function run()
     {
-        UserController::updateStep('update_location');
-        $response = Telegram::sendMessage([
-            'chat_id' => InputController::$updates->message->from->id,
-            'text'    => 'Write your country name!',
-        ]);
-        MainKeyboardController::showSettings();
+        UserController::updateStep('start_fast',InputController::$updates->message->from->id);
+        $text = 'How long You wanna fast ? 
+send the hour and minute this way:
+12:30';
+        MainKeyboardController::goBack($text);
     }
 }

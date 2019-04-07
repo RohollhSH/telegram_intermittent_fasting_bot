@@ -18,18 +18,18 @@ class startText extends Controller
 {
     private static $texts;
 
-    /**
-     * @return null
-     */
     public static function StartTextDispatcher()
     {
         $text        = InputController::$updates->message->text;
         self::$texts = [
-            '⚙️Settings'   => 'SettingInput',
-            ' ⏱Start Fast' => 'StartFast',
-            ' 📊Stats'     => 'Status',
-            'ℹ️ About'     => 'About',
-            '🗞 Article'   => 'Article'
+            '⚙️Settings'           => 'SettingInput',
+            '⏱Start Fast'          => 'AskStartFast',
+            '📊Stats'             => 'Status',
+            'ℹ️ About'             => 'About',
+            '🗞 Article'           => 'Article',
+            'Back to main menu 🔙' => 'BackMainMenu',
+            '⏱ Remaining Time'     => 'RemainTime',
+            'End Fast'             => 'EndFast'
         ];
         if (array_key_exists($text, self::$texts)) {
             $class = self::$texts[$text];

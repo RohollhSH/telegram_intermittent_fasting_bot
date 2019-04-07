@@ -20,18 +20,18 @@ class StepRoute extends Controller
     public static function stepRouteDispatcher()
     {
         $step        = UserController::getStep();
-        file_put_contents('test.txt',json_encode($step).PHP_EOL.PHP_EOL,FILE_APPEND);
         self::$texts = [
-            'start'    => 'startStep',
-            'settings' => 'settingsStep',
+            'start'           => 'StartStep',
+            'settings'        => 'SettingsStep',
+            'update_location' => 'UpdateLocation',
+            'start_fast'      => 'StartFast',
         ];
         if (array_key_exists($step, self::$texts)) {
-            file_put_contents('test.txt',json_encode("works").PHP_EOL.PHP_EOL,FILE_APPEND);
             $class = self::$texts[$step];
             $class = __NAMESPACE__ . '\\' . "stepRouteControllers\\" . $class;
             $class::run();
         } else {
-            errorTextNotDefined::run();
+            errorTextNotDefined::stepError();
         }
     }
 }

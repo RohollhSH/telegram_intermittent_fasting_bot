@@ -14,9 +14,15 @@ class UserController extends Controller
         $user                   = new User();
         $user->telegram_user_id = InputController::$updates->message->from->id;
         $user->first_name       = InputController::$updates->message->from->first_name;
-        $user->last_name        = InputController::$updates->message->from->last_name;
-        $user->user_name        = InputController::$updates->message->from->username;
-        $user->language_code    = InputController::$updates->message->from->language_code;
+        if (isset(InputController::$updates->message->from->last_name)){
+            $user->last_name        = InputController::$updates->message->from->last_name;
+        }
+        if (isset(InputController::$updates->message->from->username)){
+            $user->user_name        = InputController::$updates->message->from->username;
+        }
+        if (isset(InputController::$updates->message->from->language_code)) {
+            $user->language_code = InputController::$updates->message->from->language_code;
+        }
         $user->is_bot           = InputController::$updates->message->from->is_bot;
         $user->pay_amount       = 0;
         $user->invite_score     = 0;
@@ -46,9 +52,9 @@ class UserController extends Controller
     {
         $user = new User();
         $user = User::where('telegram_user_id', InputController::$updates->message->from->id)
-                    ->fill([
+                    ->update([
                         'country' => InputController::$updates->message->text
-                    ])->save();
+                    ]);
     }
 
     public static function updateStep($user_step)

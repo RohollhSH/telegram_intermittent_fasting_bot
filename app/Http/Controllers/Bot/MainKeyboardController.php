@@ -2,13 +2,45 @@
 
 namespace App\Http\Controllers\Bot;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Telegram;
 
 class MainKeyboardController extends Controller
 {
-    public static function showMainKeys()
+    public static function showMainKeys($text)
+    {
+        $user_status = User::select('status')
+                           ->where('telegram_user_id', InputController::$updates->message->from->id)
+                           ->first();
+        if ($user_status['status'] == 'chilling') {
+            $keyboard = [
+                [' ⏱Start Fast', ' 📊Stats'],
+                ['🗞 Article', ' ⚙️Settings']
+            ];
+        } elseif ($user_status['status'] == 'fasting') {
+            $keyboard = [
+                [' ⏱ Remaining Time', ' 📊Stats'],
+                ['🗞 Article', ' ⚙️Settings', 'End Fast']
+            ];
+        }
+        $reply_markup = Telegram::replyKeyboardMarkup([
+            'keyboard'          => $keyboard,
+            'resize_keyboard'   => true,
+            'one_time_keyboard' => true
+        ]);
+
+        $response = Telegram::sendMessage([
+            'chat_id'      => InputController::$updates->message->from->id,
+            'text'         => $text,
+            'reply_markup' => $reply_markup
+        ]);
+
+        $messageId = $response->getMessageId();
+    }
+
+    public static function showWelcome()
     {
         $keyboard = [
             [' ⏱Start Fast', ' 📊Stats', ' ⚙️Settings'],
@@ -20,14 +52,11 @@ class MainKeyboardController extends Controller
             'resize_keyboard'   => true,
             'one_time_keyboard' => true
         ]);
-
-        $response = Telegram::sendMessage([
+        $response     = Telegram::sendMessage([
             'chat_id'      => InputController::$updates->message->from->id,
-            'text'         => 'Home',
+            'text'         => 'Welcome its Your first time here',
             'reply_markup' => $reply_markup
         ]);
-
-        $messageId = $response->getMessageId();
     }
 
     public static function showUserName(InputController $updates)
@@ -51,10 +80,9 @@ class MainKeyboardController extends Controller
         $messageId = $response->getMessageId();
     }
 
-    public static function showSettings()
+    public static function goBack($text)
     {
         $keyboard     = [
-            ['Set Country and Location 📍'],
             ['Back to main menu 🔙'],
         ];
         $reply_markup = Telegram::replyKeyboardMarkup([
@@ -64,7 +92,7 @@ class MainKeyboardController extends Controller
         ]);
         $response     = Telegram::sendMessage([
             'chat_id'      => InputController::$updates->message->from->id,
-            'text'         => 'Settings.',
+            'text'         => $text,
             'reply_markup' => $reply_markup
         ]);
     }
@@ -117,6 +145,36 @@ class MainKeyboardController extends Controller
         $response = Telegram::sendMessage([
             'chat_id' => InputController::$updates->message->from->id,
             'text'    => 'OK',
+        ]);
+    }
+
+    public static function showSettings()
+    {
+//        $reply_markup = Telegram::forceReply();
+
+/*        Keyboard::make()->inline()->row(Keyboard::inlineButton([
+            'text'          => 'text',
+            'callback_data' => 'data',
+        ]));*/
+
+        $keyboard        = [
+            ['Set Country and Location 📍'],
+            ['Back to main menu 🔙'],
+        ];
+        $reply_markup    = Telegram::replyKeyboardMarkup([
+            'keyboard'          => $keyboard,
+            'resize_keyboard'   => true,
+            'one_time_keyboard' => true
+        ]);
+/*        $inline_keyboard = Telegram::inlineButton([
+            'text'          => 'text',
+            'callback_data' => 'callback_data'
+        ]);*/
+        $response        = Telegram::sendMessage([
+            'chat_id'         => InputController::$updates->message->from->id,
+            'text'            => 'Settings.',
+//            'inline_keyboard' => $inline_keyboard,
+            'reply_markup' => $reply_markup
         ]);
     }
 

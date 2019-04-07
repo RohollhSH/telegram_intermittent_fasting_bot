@@ -12,7 +12,6 @@ class About extends Controller
 {
     public static function run()
     {
-        file_put_contents('test.txt', "works" . PHP_EOL . PHP_EOL, FILE_APPEND);
         $response = Telegram::sendMessage([
             'chat_id' => InputController::$updates->message->from->id,
             'text'    => 'from setting input',

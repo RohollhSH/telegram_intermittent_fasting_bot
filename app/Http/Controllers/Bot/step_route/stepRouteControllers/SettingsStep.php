@@ -10,6 +10,6 @@ class SettingsStep extends Controller
 {
     public static function run()
     {
-        SettingsText::run();
+        SettingsText::TextDispatcher();
     }
 }

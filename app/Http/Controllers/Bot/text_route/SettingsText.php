@@ -10,12 +10,12 @@ class SettingsText extends Controller
 {
     private static $texts;
 
-    public static function StartTextDispatcher()
+    public static function TextDispatcher()
     {
         $text        = InputController::$updates->message->text;
         self::$texts = [
-            'Set Country and Location 📍'=>'AskUpdateLocation',
-            'Back to main menu 🔙'=>'BackMainMenu'
+            'Set Country and Location 📍' => 'AskUpdateLocation',
+            'Back to main menu 🔙'        => 'BackMainMenu'
         ];
         if (array_key_exists($text, self::$texts)) {
             $class = self::$texts[$text];
