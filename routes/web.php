@@ -37,4 +37,4 @@ Route::get('/', function () {
 //});
 
 Route::post('/','Bot\InputController@index');
-Route::get('/go','Bot\InputController@check');
+Route::get('/test','Bot\InputController@test');
