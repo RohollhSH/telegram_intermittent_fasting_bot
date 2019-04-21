@@ -9,10 +9,10 @@ use Telegram;
 
 class MainKeyboardController extends Controller
 {
-    public static function showMainKeys($text)
+    public static function showMainKeys($id,$text)
     {
         $user_status = User::select('status')
-                           ->where('telegram_user_id', InputController::$updates->message->from->id)
+                           ->where('telegram_user_id', $id)
                            ->first();
         if ($user_status['status'] == 'chilling') {
             $keyboard = [
@@ -21,8 +21,8 @@ class MainKeyboardController extends Controller
             ];
         } elseif ($user_status['status'] == 'fasting') {
             $keyboard = [
-                [' ⏱ Remaining Time', ' 📊Stats'],
-                ['🗞 Article', ' ⚙️Settings', 'End Fast']
+                [' ⏱ Remaining Time', 'End Fast'],
+                ['🗞 Article', ' ⚙️Settings', ' 📊Stats']
             ];
         }
         $reply_markup = Telegram::replyKeyboardMarkup([
@@ -32,19 +32,17 @@ class MainKeyboardController extends Controller
         ]);
 
         $response = Telegram::sendMessage([
-            'chat_id'      => InputController::$updates->message->from->id,
+            'chat_id'      => $id,
             'text'         => $text,
             'reply_markup' => $reply_markup
         ]);
-
-        $messageId = $response->getMessageId();
     }
 
-    public static function showWelcome()
+    public static function showWelcome($id)
     {
         $keyboard = [
-            [' ⏱Start Fast', ' 📊Stats', ' ⚙️Settings'],
-            ['🗞 Article', 'ℹ️ About']
+            [' ⏱Start Fast', ' 📊Stats'],
+            ['🗞 Article', ' ⚙️Settings']
         ];
 
         $reply_markup = Telegram::replyKeyboardMarkup([
@@ -53,7 +51,7 @@ class MainKeyboardController extends Controller
             'one_time_keyboard' => true
         ]);
         $response     = Telegram::sendMessage([
-            'chat_id'      => InputController::$updates->message->from->id,
+            'chat_id'      => $id,
             'text'         => 'Welcome its Your first time here',
             'reply_markup' => $reply_markup
         ]);
@@ -62,8 +60,8 @@ class MainKeyboardController extends Controller
     public static function showUserName(InputController $updates)
     {
         $keyboard = [
-            [' ⏱Start Fast', ' 📊Stats', ' ⚙️Settings'],
-            ['🗞 Article', 'ℹ️ About']
+            [' ⏱Start Fast', ' 📊Stats'],
+            ['🗞 Article', ' ⚙️Settings']
         ];
 
         $reply_markup = Telegram::replyKeyboardMarkup([
@@ -76,8 +74,6 @@ class MainKeyboardController extends Controller
             'text'         => 'user_saved',
             'reply_markup' => $reply_markup
         ]);
-
-        $messageId = $response->getMessageId();
     }
 
     public static function goBack($text)
@@ -100,8 +96,8 @@ class MainKeyboardController extends Controller
     public static function backMainMenu()
     {
         $keyboard     = [
-            [' ⏱Start Fast', ' 📊Stats', ' ⚙️Settings'],
-            ['🗞 Article', 'ℹ️ About']
+            [' ⏱Start Fast', ' 📊Stats'],
+            ['🗞 Article', ' ⚙️Settings']
         ];
         $reply_markup = Telegram::replyKeyboardMarkup([
             'keyboard'          => $keyboard,
@@ -123,15 +119,6 @@ class MainKeyboardController extends Controller
         ]);
     }
 
-    public static function updatedLocation()
-    {
-        self::backMainMenu();
-        $response = Telegram::sendMessage([
-            'chat_id' => InputController::$updates->message->from->id,
-            'text'    => 'Location updated',
-        ]);
-    }
-
     public static function error()
     {
         $response = Telegram::sendMessage([
@@ -148,17 +135,10 @@ class MainKeyboardController extends Controller
         ]);
     }
 
-    public static function showSettings()
+    public static function showSettings($id,$text)
     {
-//        $reply_markup = Telegram::forceReply();
-
-/*        Keyboard::make()->inline()->row(Keyboard::inlineButton([
-            'text'          => 'text',
-            'callback_data' => 'data',
-        ]));*/
-
         $keyboard        = [
-            ['Set Country and Location 📍'],
+            ['Set Country or Location'],
             ['Back to main menu 🔙'],
         ];
         $reply_markup    = Telegram::replyKeyboardMarkup([
@@ -166,20 +146,10 @@ class MainKeyboardController extends Controller
             'resize_keyboard'   => true,
             'one_time_keyboard' => true
         ]);
-/*        $inline_keyboard = Telegram::inlineButton([
-            'text'          => 'text',
-            'callback_data' => 'callback_data'
-        ]);*/
         $response        = Telegram::sendMessage([
-            'chat_id'         => InputController::$updates->message->from->id,
-            'text'            => 'Settings.',
-//            'inline_keyboard' => $inline_keyboard,
+            'chat_id'         => $id,
+            'text'            => $text,
             'reply_markup' => $reply_markup
         ]);
     }
-
-    /*Keyboard::make()->inline()->row(Keyboard::inlineButton([
-    ‘text’          => ‘text’,
-    ‘callback_data’ => ‘data’,
-    ])*/
 }

@@ -29,9 +29,9 @@ class User extends Authenticatable
     const FASTING = 'fasting';
     const CHILLING = 'chilling';
 
-    public static function getStatus()
+    public static function getStatus($id)
     {
-        $status = self::select('status')->where('telegram_user_id', InputController::$updates->message->from->id)->first();
+        $status = self::select('status')->where('telegram_user_id', $id)->first();
         return $status['status'];
     }
 

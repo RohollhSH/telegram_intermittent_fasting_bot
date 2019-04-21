@@ -13,7 +13,7 @@ class SettingInput extends Controller
 {
     public static function run()
     {
-        UserController::updateStep('settings');
-        MainKeyboardController::showSettings();
+        UserController::updateStep(InputController::$updates->message->from->id,'settings');
+        MainKeyboardController::showSettings(InputController::$updates->message->from->id,'Settings list');
     }
 }

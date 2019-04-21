@@ -14,7 +14,7 @@ class SettingsText extends Controller
     {
         $text        = InputController::$updates->message->text;
         self::$texts = [
-            'Set Country and Location 📍' => 'AskUpdateLocation',
+            'Set Country or Location' => 'AskUpdateLocation',
             'Back to main menu 🔙'        => 'BackMainMenu'
         ];
         if (array_key_exists($text, self::$texts)) {

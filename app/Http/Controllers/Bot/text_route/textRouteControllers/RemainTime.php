@@ -30,7 +30,7 @@ class RemainTime extends Controller
 $hour hours 
 $minutes minutes 
 $seconds seconds";
-            MainKeyboardController::showMainKeys($text);
+            MainKeyboardController::showMainKeys(InputController::$updates->message->from->id,$text);
         }else{
             errorTextNotDefined::run();
         }

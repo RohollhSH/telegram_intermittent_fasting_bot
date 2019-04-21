@@ -63,6 +63,4 @@ $kernel->terminate($request, $response);
 
 $response = Telegram::setWebhook(['url' => env('NGROK_URL')]);
 
-var_dump($response);
-
 

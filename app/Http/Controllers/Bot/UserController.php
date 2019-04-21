@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Bot;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Telegram\Bot\Laravel\Facades\Telegram;
 
 class UserController extends Controller
 {
@@ -48,25 +46,27 @@ class UserController extends Controller
         $user = User::where('telegram_user_id', $telegram_user_id);
     }
 
-    public static function updateLocation()
+    public static function updateLocation($id,$timezone)
     {
         $user = new User();
-        $user = User::where('telegram_user_id', InputController::$updates->message->from->id)
+        $user = User::where('telegram_user_id', $id)
                     ->update([
-                        'country' => InputController::$updates->message->text
+                        'country' => $timezone
                     ]);
+//        InputController::$updates->message->from->id
+//        InputController::$updates->message->text
     }
 
-    public static function updateStep($user_step)
+    public static function updateStep($id , $user_step)
     {
         $user = User::where('telegram_user_id',
-            InputController::$updates->message->from->id)->update(['user_step' => $user_step]);
+            $id)->update(['user_step' => $user_step]);
     }
 
-    public static function getStep()
+    public static function getStep($id)
     {
         $user_step = User::where('telegram_user_id',
-            InputController::$updates->message->from->id)->get()->pluck('user_step')->toArray();
+            $id)->get()->pluck('user_step')->toArray();
 
         return $user_step[0];
     }

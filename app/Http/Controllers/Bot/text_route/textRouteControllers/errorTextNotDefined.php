@@ -12,17 +12,12 @@ class errorTextNotDefined extends Controller
 {
     public static function run()
     {
-        UserController::updateStep('start');
-        MainKeyboardController::showMainKeys('input not found');
+        UserController::updateStep(InputController::$updates->message->from->id,'start');
+        MainKeyboardController::showMainKeys(InputController::$updates->message->from->id,'input not found');
     }
 
-    public static function stepError()
+    public static function stepError($id)
     {
-        file_put_contents('test.txt', "works" . PHP_EOL . PHP_EOL, FILE_APPEND);
-        $response = Telegram::sendMessage([
-            'chat_id' => InputController::$updates->message->from->id,
-            'text'    => 'step not found',
-        ]);
-        MainKeyboardController::showSettings();
+        MainKeyboardController::showSettings($id,'step not found');
     }
 }
