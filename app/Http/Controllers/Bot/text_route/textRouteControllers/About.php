@@ -16,6 +16,6 @@ class About extends Controller
             'chat_id' => InputController::$updates->message->from->id,
             'text'    => 'from setting input',
         ]);
-        MainKeyboardController::showSettings();
+        MainKeyboardController::showSettings(InputController::$updates->message->from->id,'no data for now');
     }
 }

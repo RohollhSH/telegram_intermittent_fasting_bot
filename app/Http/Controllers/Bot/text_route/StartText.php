@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Bot\text_route;
 use App\Http\Controllers\Bot\InputController;
 use App\Http\Controllers\Bot\text_route\textRouteControllers\errorTextNotDefined;
 use App\Http\Controllers\Controller;
+use App\Models\Fast;
 use Telegram;
 
 class startText extends Controller
@@ -24,7 +25,7 @@ class startText extends Controller
         self::$texts = [
             '⚙️Settings'           => 'SettingInput',
             '⏱Start Fast'          => 'AskStartFast',
-            '📊Stats'             => 'Status',
+            '📊Stats'              => 'Status',
             'ℹ️ About'             => 'About',
             '🗞 Article'           => 'Article',
             'Back to main menu 🔙' => 'BackMainMenu',
@@ -38,5 +39,6 @@ class startText extends Controller
         } else {
             errorTextNotDefined::run();
         }
+        //if (isset(InputController::$updates->callback_query->data))
     }
 }

@@ -14,7 +14,7 @@ class AskStartFast extends Controller
 {
     public static function run()
     {
-        UserController::updateStep('start_fast',InputController::$updates->message->from->id);
+        UserController::updateStep(InputController::$updates->message->from->id,'start_fast');
         $text = 'How long You wanna fast ? 
 send the hour and minute this way:
 12:30';

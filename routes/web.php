@@ -35,6 +35,6 @@ Route::get('/', function () {
 //Route::get('/public/token/webhook_activate.php', function () {
 //    return view('welcome');
 //});
-
 Route::post('/','Bot\InputController@index');
-Route::get('/test','Bot\InputController@test');
+//Route::get('/test','Bot\text_route\textRouteControllers\AskUpdateLocation@run');
+Route::get('/test','Bot\Timezones@WorldTimezones');

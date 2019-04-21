@@ -16,27 +16,28 @@ class EndFast extends Controller
     {
         FastController::endFast();
         $time = FastController::passedTime();
-        UserController::updateStep('start');
+        UserController::updateStep(InputController::$updates->message->from->id,'start');
         $text = self::niceTimePrint($time);
-        User::where('telegram_user_id',InputController::$updates->message->from->id)
+        User::where('telegram_user_id', InputController::$updates->message->from->id)
             ->update([
                 'status' => User::CHILLING
             ]);
-        MainKeyboardController::showMainKeys($text);
+        MainKeyboardController::showMainKeys(InputController::$updates->message->from->id,$text);
     }
 
     public static function niceTimePrint($time)
     {
-        $hour = intval($time / 3600 );
-        $minutes = intval(($time % 3600)/60);
-        $seconds = $time - $hour*3600 -$minutes*60;
-        $hour = CuteNumbers::change($hour);
+        $hour    = intval($time / 3600);
+        $minutes = intval(($time % 3600) / 60);
+        $seconds = $time - $hour * 3600 - $minutes * 60;
+        $hour    = CuteNumbers::change($hour);
         $minutes = CuteNumbers::change($minutes);
         $seconds = CuteNumbers::change($seconds);
-        $text = "You fasted for  : 
+        $text    = "You fasted for  : 
 $hour hours 
 $minutes minutes 
 $seconds seconds";
+
         return $text;
     }
 }

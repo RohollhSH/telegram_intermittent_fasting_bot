@@ -21,9 +21,7 @@ class FastController extends Controller
     public static function endFast()
     {
         $last_fast = Fast::where('user_id', InputController::$updates->message->from->id)
-                         ->where('status',Fast::PROCESS);
-        file_put_contents('test.txt', json_encode($last_fast) . PHP_EOL . PHP_EOL, FILE_APPEND);
-
+                         ->where('status', Fast::PROCESS);
         $last_fast->update([
             'status'          => Fast::ENDED,
             'break_fast_time' => time(),

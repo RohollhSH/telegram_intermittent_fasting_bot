@@ -10,7 +10,6 @@ namespace app\Bot\Commands;
 
     use Telegram\Bot\Actions;
     use Telegram\Bot\Commands\Command;
-
 class AboutCommand extends Command
 {
     /**

@@ -14,6 +14,6 @@ class BackMainMenu extends Controller
     public static function run()
     {
         UserController::updateStep('start',InputController::$updates->message->from->id);
-        MainKeyboardController::showMainKeys('back to Main menu');
+        MainKeyboardController::showMainKeys(InputController::$updates->message->from->id,'back to Main menu');
     }
 }

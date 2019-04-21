@@ -16,16 +16,16 @@ class StartFast extends Controller
 {
     public static function run()
     {
-        if (User::getStatus() == User::CHILLING) {
+        if (User::getStatus(InputController::$updates->message->from->id) == User::CHILLING) {
             User::updateStatus(User::FASTING);
             preg_match('/^(\d+):([0-5]?[0-9]|60)$/m', InputController::$updates->message->text, $time);
             if ($time) {
                 $time_length = $time[1] * 3600 + $time[2] * 60;
                 FastController::create($time_length);
                 $time = FastController::remainTime();
-                UserController::updateStep('start');
+                UserController::updateStep(InputController::$updates->message->from->id,'start');
                 $text = self::niceTimePrint($time);
-                MainKeyboardController::showMainKeys($text);
+                MainKeyboardController::showMainKeys(InputController::$updates->message->from->id,$text);
             }else{
                 User::where('telegram_user_id',InputController::$updates->message->from->id)
                     ->update([
@@ -38,7 +38,7 @@ write it like 14:55',
                 ]);
                 errorTextNotDefined::run();
             }
-        }elseif(User::getStatus() == User::FASTING){
+        }elseif(User::getStatus(InputController::$updates->message->from->id) == User::FASTING){
             errorTextNotDefined::run();
         }
     }
